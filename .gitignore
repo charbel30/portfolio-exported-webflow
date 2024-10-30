@@ -1,0 +1,23 @@
+# Ignore the myenv directory
+myenv/
+
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore other common files and directories
+*.db
+*.sqlite3
+*.log
+*.pot
+*.mo
+*.swp
+*.swo
+*.DS_Store
+*.egg-info/
+.env
+.vscode/
+.idea/
+node_modules/
