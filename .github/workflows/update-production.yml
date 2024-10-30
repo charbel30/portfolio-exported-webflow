@@ -15,12 +15,17 @@ jobs:
       with:
         ref: development
 
-    - name: Create or update production branch
+    - name: Set up Git
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Create or update production branch
+      env:
+        GH_PAT: ${{ secrets.GH_PAT }}
+      run: |
         git checkout -B production
         git rm -r .github
         git rm -r scripts
         git commit -m "Update production branch"
-        git push origin production --force
+        git push https://x-access-token:${GH_PAT}@github.com/charbel30/CharbelTannous-portfolio.git production --force
