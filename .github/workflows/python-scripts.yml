@@ -20,6 +20,19 @@ jobs:
         python -m pip install --upgrade pip
         pip install beautifulsoup4 html5lib htmlmin requests
 
+    - name: Install Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'  # You can specify the Node.js version you need
+
+    - name: Install Prettier
+      run: npm install -g prettier
+
+    - name: Start local server
+      run: |
+        python -m http.server 5500 &
+        sleep 5  # Wait for the server to start
+
     - name: Run add_html_extension.py
       run: python scripts/add_html_extension.py
 
