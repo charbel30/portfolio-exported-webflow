@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html
   data-wf-page="66f2157fdff711e73071e04d"
@@ -45,19 +45,22 @@
     </script>
     <link href="images/favicon.png" rel="shortcut icon" type="image/x-icon" />
     <link href="images/app-icon.png" rel="apple-touch-icon" />
+
+    <!-- Google tag (gtag.js) -->
     <script
-      async=""
+      async
       src="https://www.googletagmanager.com/gtag/js?id=G-LZYXFNN50E"
     ></script>
-    <script type="text/javascript">
+    <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      gtag("set", "developer_id.dZGVlNj", true);
+
       gtag("config", "G-LZYXFNN50E");
     </script>
+
     <!-- Please keep this css code to improve the font quality-->
     <style>
       * {
@@ -2423,28 +2426,28 @@
             containerHeight + 80,
             containerWidth + 320,
             160,
-            { render: { fillStyle: "#000000" }, isStatic: true },
+            { render: { fillStyle: "#000000" }, isStatic: true }
           );
           var wallLeft = Bodies.rectangle(
             -80,
             containerHeight / 2,
             160,
             containerHeight,
-            { isStatic: true },
+            { isStatic: true }
           );
           var wallRight = Bodies.rectangle(
             containerWidth + 80,
             containerHeight / 2,
             160,
             1200,
-            { isStatic: true },
+            { isStatic: true }
           );
           var roof = Bodies.rectangle(
             containerWidth / 2 + 160,
             -80,
             containerWidth + 320,
             160,
-            { isStatic: true },
+            { isStatic: true }
           );
           function createScaledTag(x, y, width, height, texture) {
             return Bodies.rectangle(x, y, width * scale, height * scale, {
@@ -2467,7 +2470,7 @@
             500 * scale,
             164,
             56,
-            "images/php.svg",
+            "images/php.svg"
           );
 
           var tagTailwind = createScaledTag(
@@ -2475,7 +2478,7 @@
             460 * scale,
             240,
             56,
-            "images/tailwind.svg",
+            "images/tailwind.svg"
           );
 
           var tagPython = createScaledTag(
@@ -2483,7 +2486,7 @@
             420 * scale,
             200,
             56,
-            "images/python.svg",
+            "images/python.svg"
           );
 
           var tagGit = createScaledTag(
@@ -2491,7 +2494,7 @@
             380 * scale,
             160,
             56,
-            "images/git.svg",
+            "images/git.svg"
           );
 
           var tagNextjs = createScaledTag(
@@ -2499,7 +2502,7 @@
             540 * scale,
             248,
             56,
-            "images/nextjs.svg",
+            "images/nextjs.svg"
           );
 
           var tagSupabase = createScaledTag(
@@ -2507,7 +2510,7 @@
             490 * scale,
             105,
             56,
-            "images/supabase.svg",
+            "images/supabase.svg"
           );
 
           var tagFirebase = createScaledTag(
@@ -2515,7 +2518,7 @@
             440 * scale,
             186,
             56,
-            "images/firebase.svg",
+            "images/firebase.svg"
           );
 
           var tagC = createScaledTag(
@@ -2523,7 +2526,7 @@
             260 * scale,
             128,
             56,
-            "images/c.svg",
+            "images/c.svg"
           );
 
           var tagJavascript = createScaledTag(
@@ -2531,7 +2534,7 @@
             420 * scale,
             168,
             56,
-            "images/javascript.svg",
+            "images/javascript.svg"
           );
 
           var tagJava = createScaledTag(
@@ -2539,7 +2542,7 @@
             380 * scale,
             155,
             56,
-            "images/java.svg",
+            "images/java.svg"
           );
 
           var tagReact = createScaledTag(
@@ -2547,7 +2550,7 @@
             360 * scale,
             180,
             56,
-            "images/react.svg",
+            "images/react.svg"
           );
 
           var tagPytorch = createScaledTag(
@@ -2555,7 +2558,7 @@
             260 * scale,
             172,
             56,
-            "images/pytorch.svg",
+            "images/pytorch.svg"
           );
 
           World.add(engine.world, [
