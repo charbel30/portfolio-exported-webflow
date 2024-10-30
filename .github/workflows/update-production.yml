@@ -1,0 +1,26 @@
+name: Update Production Branch
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  update-production:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout development branch
+      uses: actions/checkout@v2
+      with:
+        ref: development
+
+    - name: Create or update production branch
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git checkout -B production
+        git rm -r .github
+        git rm -r scripts
+        git commit -m "Update production branch"
+        git push origin production --force
