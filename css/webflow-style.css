@@ -5820,15 +5820,7 @@ figcaption {
   inset: 0.125rem 0% 0%;
 }
 
-.form-field-wrapper-checkbox {
-  grid-column-gap: 0.75rem;
-  grid-row-gap: 0.75rem;
-  border-bottom: 1px solid var(--outline);
-  flex-direction: column;
-  margin-bottom: -4px;
-  padding: 4rem 0 0;
-  display: flex;
-}
+
 
 .empty-state {
   color: #fff0;
@@ -5857,7 +5849,7 @@ figcaption {
   justify-content: center;
   align-items: center;
   font-family: Plusjakartasans, sans-serif;
-  display: block; /* Changed from none to block */
+  display: flex; /* Ensure it is flex to center content */
   position: fixed;
   inset: 0%;
   overflow: hidden;
@@ -7741,4 +7733,182 @@ figcaption {
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+}
+
+
+
+/* checkbox /* checkbox styles */
+/* From Uiverse.io by Timbar09 */ 
+.checkbox__container {
+  --primary-clr-1: #455ce9; /* This was already set to your color */
+  --primary-clr-2: #455ce9; /* Updated to match */
+  --text-clr-1: #8f8f8f;
+  --checkbox-bg-clr: #455ce933; /* Made this a transparent version of your blue */
+  --checkbox-border-clr: #455ce955; /* Made this a semi-transparent version of your blue */
+  /* Rest of the styles remain the same */
+
+  color: var(--text-clr-1);
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-left: 100px;
+  width: auto; /* Adjust width to fit within the form wrapper */
+  position: relative;
+  padding: 0.5rem 0; /* Add padding for better spacing */
+}
+
+.checkbox {
+  --dimension: 1.5em;
+  --tick-dimension: 0.15em;
+
+  appearance: none;
+  margin: 0;
+  position: relative;
+  width: var(--dimension);
+  height: var(--dimension);
+  border: 1px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  rotate: 45deg;
+}
+
+.checkbox:checked {
+  animation: shrink 0.5s ease forwards;
+}
+
+.checkbox:not(:checked) {
+  animation: grow 0.5s 0.75s ease forwards;
+}
+
+@keyframes shrink {
+  0% {
+    scale: 1;
+    background-color: var(--checkbox-bg-clr);
+    border: solid 1px var(--checkbox-border-clr);
+  }
+  50% {
+    scale: 0;
+    background-color: var(--checkbox-bg-clr);
+    border: solid 1px var(--checkbox-border-clr);
+  }
+  51% {
+    scale: 0;
+    background-color: transparent;
+    border: solid 1px transparent;
+  }
+  100% {
+    scale: 1;
+    background-color: transparent;
+    border: solid 1px transparent;
+  }
+}
+
+@keyframes grow {
+  0% {
+    scale: 0;
+    background-color: transparent;
+    border: solid 1px transparent;
+  }
+
+  100% {
+    scale: 1;
+    background-color: var(--checkbox-bg-clr);
+    border: solid 1px var(--checkbox-border-clr);
+  }
+}
+
+.checkbox:before,
+.checkbox:after {
+  content: "";
+  position: absolute;
+  top: calc(50% - var(--tick-dimension) / 2);
+  left: calc(50% - var(--tick-dimension) / 2);
+  width: var(--tick-dimension);
+  height: var(--tick-dimension);
+  border-radius: 10rem;
+}
+
+.checkbox::before {
+  background-color: transparent;
+  top: calc(var(--dimension) * 0.65);
+  left: 0;
+  width: var(--tick-dimension);
+}
+
+.checkbox:not(:checked)::before {
+  transition: background-color 0.3s 0.5s ease-in-out, width 0.5s ease-in-out;
+}
+
+.checkbox:checked::before {
+  background-color: var(--primary-clr-1);
+  top: calc(var(--dimension) * 0.65);
+  left: 0;
+  width: calc(var(--dimension) / 2);
+  transition: background-color 0.3s 0.3s ease-in-out,
+    width 0.5s 0.75s ease-in-out;
+}
+
+.checkbox::after {
+  background-color: transparent;
+  top: 0;
+  left: calc((var(--dimension) * 0.5) - var(--tick-dimension));
+  height: var(--tick-dimension);
+}
+
+.checkbox:not(:checked)::after {
+  transition: background-color 0.3s 0.5s ease-in-out, height 0.5s ease-in-out;
+}
+
+.checkbox:checked::after {
+  background-color: var(--primary-clr-2);
+  top: 0;
+  left: calc((var(--dimension) * 0.5) - var(--tick-dimension));
+  height: calc(var(--dimension) * 0.75);
+  transition: background-color 0.3s 0.3s ease-in-out, height 0.5s 1s ease-in-out;
+}
+
+.checkbox__label {
+  --hover: #cdcdcd;
+  --checked: #8f8f8f49;
+  --stroke-dimension: 0.05em;
+
+  cursor: pointer;
+  user-select: none;
+  scale: 1.5;
+  transition: color 0.3s;
+}
+
+.checkbox__label:hover {
+  color: var(--hover);
+}
+
+.checkbox:checked + .checkbox__label--text {
+  color: var(--checked);
+}
+
+.checkbox__label--text {
+  position: relative;
+}
+
+.checkbox__label--text::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * var(--stroke-dimension));
+  width: var(--stroke-dimension);
+  height: var(--stroke-dimension);
+  margin-right: 0.5em;
+  border-radius: 1em;
+}
+
+.checkbox__label--text::before {
+  background-color: var(--primary-clr-1);
+  width: 0;
+  transition: width 0.5s, background-color 0.3s 0.5s;
+}
+
+.checkbox:checked + .checkbox__label--text::before {
+  background-color: var(--checked);
+  width: calc(100% + var(--stroke-dimension));
+  transition: width 1.25s 0.75s, background-color 0.5s 2s;
 }
