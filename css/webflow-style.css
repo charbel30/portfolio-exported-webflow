@@ -5857,7 +5857,7 @@ figcaption {
   justify-content: center;
   align-items: center;
   font-family: Plusjakartasans, sans-serif;
-  display: none;
+  display: block; /* Changed from none to block */
   position: fixed;
   inset: 0%;
   overflow: hidden;
@@ -5889,6 +5889,7 @@ figcaption {
   width: 200px;
   height: 1.5px;
 }
+
 
 @media screen and (min-width: 1280px) {
   .sidebar-bottom {
