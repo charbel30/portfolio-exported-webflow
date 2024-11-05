@@ -4310,6 +4310,20 @@ figcaption {
   padding-bottom: 0;
   display: grid;
 }
+.about-hero-component-tetris {
+  grid-column-gap: 4rem;
+  grid-row-gap: 0rem;
+  flex-direction: row;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: 50% 1fr;
+  grid-auto-columns: 1fr;
+  justify-content: space-between;
+  min-height: 75vh;
+  padding-top: 10rem;
+  padding-bottom: 0;
+  display: grid;
+}
+
 
 .about-hero-component.reverse {
   grid-column-gap: 5rem;
@@ -4398,6 +4412,18 @@ figcaption {
   bottom: 0;
   overflow: hidden;
 }
+.about-image-tetris {
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  margin-bottom: -4.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  position: sticky;
+  bottom: 0;
+  overflow: hidden;
+}
 
 .about-history {
   grid-column-gap: 4rem;
@@ -4427,7 +4453,7 @@ figcaption {
   width: 100%;
   height: 100%;
   position: relative;
-  overflow: hidden;
+
 }
 
 .title-stacked {
@@ -4756,10 +4782,18 @@ figcaption {
   transform: scale(1.03);
 }
 
+/* Option 2: Bottom Right Radial */
 .section-contact-hero {
-  background-image: linear-gradient(to bottom, #0f131600, var(--linear-two));
+  background: radial-gradient(
+    circle at 100% 100%,
+    #151a1e 0%,
+    #111518 40%,
+    #0f1316 100%
+  );
+  border-top: 1px solid rgba(15, 19, 22, 0.3);
   margin-bottom: 4.5rem;
 }
+
 
 .footer-bottom {
   grid-column-gap: 0rem;
