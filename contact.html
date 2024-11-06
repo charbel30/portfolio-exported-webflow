@@ -53,78 +53,7 @@
     </script>
     <link href="images/favicon.png" rel="shortcut icon" type="image/x-icon" />
     <link href="images/app-icon.png" rel="apple-touch-icon" />
-    
 
-
-    <!-- Please keep this css code to improve the font quality-->
-    <style>
-           .about-hero-component-tetris {
-        display: grid;
-        justify-content: flex-end;
-        align-items: center;
-        min-height: 90vh;
-        position: relative;
-      
-      }
-      
-      .about-image-tetris {
-        width: 50%;
-        max-width: 400px;
-        height: 800px; /* Set fixed height */
-        margin: 50px auto;
-        perspective: 1000px;
-        padding-bottom: 70px;
-        margin-bottom: 70px;
-      }
-      
-      .tetris-card {
-        background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-        border-radius: 20px;
-        padding: 20px;
-   
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3),
-                    0 0 0 1px rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        transition: transform 0.3s ease;
-        height: 100%; /* Fill parent height */
-        display: flex;
-        flex-direction: column;
-      }
-      
-      .tetris-frame {
-        background: rgba(0,0,0,0.4);
-        border-radius: 12px;
-        padding: 10px;
-        border: 1px solid rgba(255,255,255,0.1);
-        flex: 1; /* Take remaining space */
-        position: relative;
-        min-height: 600px; /* Minimum height for game area */
-      }
-      
-      .game-container {
-        border-radius: 8px;
-        overflow: hidden;
-        background: rgba(0,0,0,0.8);
-        height: 100% !important;
-        width: 100% !important;
-      }
-      
-      .blockrain-game-holder {
-        border-radius: 8px;
-        height: 100% !important;
-      }
-      
-      .blockrain-board {
-        height: 100% !important;
-        width: auto !important;
-        max-width: 100%;
-        margin: 0 auto;
-      }
-      * {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    </style>
     <style>
       html {
         font-size: calc(0.625rem + 0.41666666666666663vw);
@@ -145,33 +74,162 @@
         }
       }
     </style>
+    <style>
+      .about-hero-component-tetris {
+        display: grid;
+        justify-content: flex-end;
+        align-items: center;
+        min-height: 90vh;
+        position: relative;
+        width: 100%;
+        max-width: 1920px;
+        margin: 0 auto;
+      }
+      
+      .about-image-tetris {
+        width: min(75%, 600px);  /* Using min() for responsive width */
+        aspect-ratio: 1/2;       /* Maintain aspect ratio instead of fixed height */
+        margin: 2rem auto;
+        height: min(75vh, 1000px);  /* Responsive height */
+        perspective: 1000px;
+        padding-bottom: 2rem;
+      }
+      
+      .tetris-card {
+        background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+        border-radius: 20px;
+        padding: clamp(1rem, 2vw, 2rem);  /* Responsive padding */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
+                    0 0 0 1px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;  /* Prevent content overflow */
+      }
+      
+      .tetris-frame {
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 12px;
+        padding: clamp(0.5rem, 1vw, 1rem);  /* Responsive padding */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        flex: 1;
+        position: relative;
+        min-height: 0;  /* Allow flex to handle height */
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .game-container {
+        border-radius: 8px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.8);
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+      
+      .blockrain-game-holder {
+        border-radius: 8px;
+        height: 100% !important;
+        width: 100% !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      
+      .blockrain-board {
+        height: 100% !important;
+        width: 100% !important;
+        max-width: none;
+        aspect-ratio: 1/2;
+        margin: 0 auto;
+      }
+      
+      .tetris-controls {
+        margin-top: 1rem;
+        text-align: center;
+        font-size: clamp(0.75rem, 1vw, 1rem);  /* Responsive font size */
+        color: rgba(255, 255, 255, 0.8);
+      }
+      
+      /* Improved responsive breakpoints */
+      @media screen and (max-width: 1440px) {
+        .about-image-tetris {
+          width: min(60%, 500px);
+        }
+      }
+      
+      @media screen and (max-width: 1024px) {
+        .about-image-tetris {
+          width: min(70%, 400px);
+        }
+      }
+      
+      @media screen and (max-width: 768px) {
+        .about-image-tetris {
+          width: min(80%, 350px);
+        }
+      }
+      
+      /* Hide on mobile */
+      @media screen and (max-width: 767px) {
+        .about-image-tetris {
+          display: none;
+        }
+      }
+      
+      /* Prevent zoom issues */
+      @media screen and (min-width: 768px) {
+        .tetris-card {
+          transform: scale(1);
+          transform-origin: center center;
+          will-change: transform;
+        }
+        
+        .game-container {
+          contain: content;
+        }
+      }
+      
+      /* Font smoothing */
+      * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
     <link rel="stylesheet" href="/css/blockrain.css" />
   </head>
   <body>
-    <div class="preloader" data-w-id="a30832af-37da-084b-575e-ca3a1631cb9b">
-      <div
-        class="preloader-content"
-        data-w-id="a30832af-37da-084b-575e-ca3a1631cb9c"
-      >
+    
+    <div class="page-wrapper">
+
+      <div class="preloader" data-w-id="a30832af-37da-084b-575e-ca3a1631cb9b">
         <div
-          class="preloader-brand"
-          data-w-id="a30832af-37da-084b-575e-ca3a1631cb9d"
+          class="preloader-content"
+          data-w-id="a30832af-37da-084b-575e-ca3a1631cb9c"
         >
-          Char
-        </div>
-        <div
-          class="preloader-line"
-          data-w-id="a30832af-37da-084b-575e-ca3a1631cb9f"
-        ></div>
-        <div
-          class="preloader-brand"
-          data-w-id="a30832af-37da-084b-575e-ca3a1631cba0"
-        >
-          bel.
+          <div
+            class="preloader-brand"
+            data-w-id="a30832af-37da-084b-575e-ca3a1631cb9d"
+          >
+            Char
+          </div>
+          <div
+            class="preloader-line"
+            data-w-id="a30832af-37da-084b-575e-ca3a1631cb9f"
+          ></div>
+          <div
+            class="preloader-brand"
+            data-w-id="a30832af-37da-084b-575e-ca3a1631cba0"
+          >
+            bel.
+          </div>
         </div>
       </div>
-    </div>
-    <div class="page-wrapper">
       <div class="global-styles w-embed">
         <style>
           /* Snippet gets rid of top margin on first element in any rich text*/
@@ -239,7 +297,10 @@
             -webkit-box-orient: vertical;
           }
         </style>
+        <!-- Please keep this css code to improve the font quality-->
+   
       </div>
+      
       <main class="main-wrapper">
         <div class="page-content">
           <div class="page-sections-wrapper">
@@ -297,14 +358,12 @@
                 <div class="page-padding">
                   <div class="container-large">
                     <div class="about-hero-component-tetris reverse">
-                      <div 
+                      <div
                         class="about-image-tetris"
-                        data-w-id="fe98b78f-d774-7d62-e8fb-063f8fe78824"
                         id="w-node-fe98b78f-d774-7d62-e8fb-063f8fe78824-3071e099"
                       >
                         <div class="tetris-card">
-                          <div class="tetris-header">
-                          </div>
+                          <div class="tetris-header"></div>
                           <div class="tetris-frame">
                             <div id="tetris" class="game-container"></div>
                           </div>
@@ -330,16 +389,20 @@
                         </div>
                       </div>
                       <div class="form-base" id="scroll">
-                        <div class="form-wrapper w-form">
-                          <form
-                            class="form"
-                            data-name="Email Form"
-                            data-wf-element-id="2565f5fd-e026-6fd1-f1c5-6e39992a0d2d"
-                            data-wf-page-id="66f2157fdff711e73071e099"
-                            id="email-form"
-                            method="get"
-                            name="email-form"
-                          >
+                        <div class="form-wrapper">
+                          <form class="form" id="contactForm">
+                            <!-- Web3Forms access key -->
+                            <input
+                              type="hidden"
+                              name="access_key"
+                              value="31b2b4e8-63cf-4c4d-961f-5544c25d7194"
+                            />
+                            <input
+                              type="hidden"
+                              name="subject"
+                              value="New Contact Form Submission"
+                            />
+
                             <div class="form-field-wrapper">
                               <div class="form-field-title">
                                 <div class="dot-wrapper">
@@ -353,15 +416,16 @@
                                 </div>
                               </div>
                               <input
-                                class="form-field w-input"
-                                data-name="Name 2"
-                                id="name-2"
-                                maxlength="256"
-                                name="name-2"
+                                class="form-field"
+                                id="name"
+                                name="name"
                                 placeholder="Jane Doe"
                                 type="text"
+                                required
                               />
+                              <div class="error-message" id="nameError"></div>
                             </div>
+
                             <div class="form-field-wrapper">
                               <div class="form-field-title">
                                 <div class="dot-wrapper">
@@ -370,20 +434,21 @@
                                     <div class="dot"></div>
                                   </div>
                                 </div>
-                                <label class="text-size-regular" for="name-3"
+                                <label class="text-size-regular" for="email"
                                   >What's your email?</label
                                 >
                               </div>
                               <input
-                                class="form-field w-input"
-                                data-name="Name 2"
-                                id="name-2"
-                                maxlength="256"
-                                name="name-2"
-                                placeholder="Jane@example.com"
+                                class="form-field"
+                                id="email"
+                                name="email"
+                                placeholder="jane@example.com"
                                 type="email"
+                                required
                               />
+                              <div class="error-message" id="emailError"></div>
                             </div>
+
                             <div class="form-field-wrapper">
                               <div class="form-field-title">
                                 <div class="dot-wrapper">
@@ -392,33 +457,82 @@
                                     <div class="dot"></div>
                                   </div>
                                 </div>
-                                <label class="text-size-regular" for="name-3">Subject</label>
+                                <label class="text-size-regular">Subject</label>
                               </div>
-                              <label class="checkbox__label" for="checkbox-job-opportunity">
+                              <label
+                                class="checkbox__label"
+                                for="checkbox-job-opportunity"
+                              >
                                 <span class="checkbox__container">
-                                  <input class="checkbox" id="checkbox-job-opportunity" type="checkbox" />
-                                  <span class="checkbox__label--text">Job Opportunity</span>
+                                  <input
+                                    class="checkbox"
+                                    id="checkbox-job-opportunity"
+                                    name="subject_type[]"
+                                    type="checkbox"
+                                    value="Job Opportunity"
+                                  />
+                                  <span class="checkbox__label--text"
+                                    >Job Opportunity</span
+                                  >
                                 </span>
                               </label>
-                              <label class="checkbox__label" for="checkbox-project-collaboration">
+                              <label
+                                class="checkbox__label"
+                                for="checkbox-project-collaboration"
+                              >
                                 <span class="checkbox__container">
-                                  <input class="checkbox" id="checkbox-project-collaboration" type="checkbox" />
-                                  <span class="checkbox__label--text">Project Collaboration</span>
+                                  <input
+                                    class="checkbox"
+                                    id="checkbox-project-collaboration"
+                                    name="subject_type[]"
+                                    type="checkbox"
+                                    value="Project Collaboration"
+                                  />
+                                  <span class="checkbox__label--text"
+                                    >Project Collaboration</span
+                                  >
                                 </span>
                               </label>
-                              <label class="checkbox__label" for="checkbox-general-inquiry">
+                              <label
+                                class="checkbox__label"
+                                for="checkbox-general-inquiry"
+                              >
                                 <span class="checkbox__container">
-                                  <input class="checkbox" id="checkbox-general-inquiry" type="checkbox" />
-                                  <span class="checkbox__label--text">General Inquiry</span>
+                                  <input
+                                    class="checkbox"
+                                    id="checkbox-general-inquiry"
+                                    name="subject_type[]"
+                                    type="checkbox"
+                                    value="General Inquiry"
+                                  />
+                                  <span class="checkbox__label--text"
+                                    >General Inquiry</span
+                                  >
                                 </span>
                               </label>
-                              <label class="checkbox__label" for="checkbox-other">
+                              <label
+                                class="checkbox__label"
+                                for="checkbox-other"
+                              >
                                 <span class="checkbox__container">
-                                  <input class="checkbox" id="checkbox-other" type="checkbox" />
-                                  <span class="checkbox__label--text">Other</span>
+                                  <input
+                                    class="checkbox"
+                                    id="checkbox-other"
+                                    name="subject_type[]"
+                                    type="checkbox"
+                                    value="Other"
+                                  />
+                                  <span class="checkbox__label--text"
+                                    >Other</span
+                                  >
                                 </span>
                               </label>
+                              <div
+                                class="error-message"
+                                id="subjectError"
+                              ></div>
                             </div>
+
                             <div class="form-field-wrapper">
                               <div class="form-field-title">
                                 <div class="dot-wrapper">
@@ -427,30 +541,45 @@
                                     <div class="dot"></div>
                                   </div>
                                 </div>
-                                <label class="text-size-regular" for="name-3">Message</label>
+                                <label class="text-size-regular" for="message"
+                                  >Message</label
+                                >
                               </div>
                               <textarea
-                                class="form-field form-field-large w-input"
-                                data-name="Field 2"
-                                id="field-2"
-                                maxlength="5000"
-                                name="field-2"
+                                class="form-field form-field-large"
+                                id="message"
+                                name="message"
                                 placeholder="I need help with..."
+                                required
                               ></textarea>
+                              <div
+                                class="error-message"
+                                id="messageError"
+                              ></div>
                             </div>
-                            <input
-                              class="submit-button w-button"
-                              data-wait="Please wait..."
+
+                            <button
+                              class="submit-button"
                               type="submit"
-                              value="Send message"
-                            />
+                              id="submitButton"
+                            >
+                              Send message
+                            </button>
                           </form>
-                          <div class="form-message-success w-form-done">
+                          <div
+                            class="form-message-success"
+                            id="successMessage"
+                            style="display: none"
+                          >
                             <div class="text-size-regular">
                               Thank you! Your message has been received!
                             </div>
                           </div>
-                          <div class="form-message-error w-form-fail">
+                          <div
+                            class="form-message-error"
+                            id="errorMessage"
+                            style="display: none"
+                          >
                             <div class="text-size-small">
                               Oops! Something went wrong while submitting the
                               form.
@@ -473,7 +602,6 @@
                         data-duration-out="100"
                         data-easing="ease"
                       >
-                        
                         <div class="tabs-content w-tab-content">
                           <div class="w-tab-pane" data-w-tab="Tab 1"></div>
                           <div class="w-tab-pane" data-w-tab="Tab 2"></div>
@@ -1019,23 +1147,155 @@
     <div id="tetris">
       <script src="/js/blockrain.jquery.min.js"></script>
       <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
           $("#tetris").blockrain({
             autoplay: false, // Disable autoplay
             autoplayRestart: false,
             speed: 50, // Standard Tetris speed
-            blockWidth: 10 ,
+            blockWidth: 10,
             showFieldOnStart: true,
-            theme: 'candy',
+            theme: "candy",
             // Custom text
-            playText: 'Ready to play Tetris?',
-            playButtonText: 'Start Game',
-            gameOverText: 'Game Over!',
-            restartButtonText: 'Play Again',
-            scoreText: 'Score'
+            playText: "Ready to play Tetris?",
+            playButtonText: "Start Game",
+            gameOverText: "Game Over!",
+            restartButtonText: "Play Again",
+            scoreText: "Score",
           });
         });
-        </script>
+      </script>
+    </div>
+    <div class="form">
+      <script>
+        // Get form elements
+        const form = document.getElementById("contactForm");
+        const successMessage = document.getElementById("successMessage");
+        const errorMessage = document.getElementById("errorMessage");
+        const submitButton = document.getElementById("submitButton");
+
+        // Hide messages by default (in case inline styles are removed)
+        successMessage.style.display = "none";
+        errorMessage.style.display = "none";
+
+        // Validation functions
+        function validateEmail(email) {
+          const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return re.test(email);
+        }
+
+        function validateName(name) {
+          return name.trim().length >= 2;
+        }
+
+        function validateSubjects() {
+          const checkboxes = document.querySelectorAll(
+            'input[name="subject_type[]"]:checked'
+          );
+          return checkboxes.length > 0;
+        }
+
+        function showError(elementId, message) {
+          const errorElement = document.getElementById(elementId);
+          errorElement.textContent = message;
+        }
+
+        function clearErrors() {
+          const errorElements = document.querySelectorAll(".error-message");
+          errorElements.forEach((element) => (element.textContent = ""));
+          errorMessage.style.display = "none";
+          successMessage.style.display = "none";
+        }
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          clearErrors();
+          const formData = new FormData(form);
+          let isValid = true;
+
+          // Validate name
+          if (!validateName(formData.get("name"))) {
+            showError(
+              "nameError",
+              "Please enter a valid name (minimum 2 characters)"
+            );
+            isValid = false;
+          }
+
+          // Validate email
+          if (!validateEmail(formData.get("email"))) {
+            showError("emailError", "Please enter a valid email address");
+            isValid = false;
+          }
+
+          // Validate subject checkboxes
+          if (!validateSubjects()) {
+            showError("subjectError", "Please select at least one subject");
+            isValid = false;
+          }
+
+          if (!isValid) return;
+
+          // Get selected subjects and combine them
+          const selectedSubjects = Array.from(
+            document.querySelectorAll('input[name="subject_type[]"]:checked')
+          )
+            .map((cb) => cb.value)
+            .join(", ");
+          formData.append("subject_types", selectedSubjects);
+
+          submitButton.disabled = true;
+          submitButton.textContent = "Sending...";
+
+          try {
+            const response = await fetch("https://api.web3forms.com/submit", {
+              method: "POST",
+              body: formData,
+            });
+            const data = await response.json();
+
+            if (data.success) {
+              form.style.display = "none"; // Hide the form
+              successMessage.style.display = "block";
+              submitButton.textContent = "Send message";
+            } else {
+              throw new Error("Submission failed");
+            }
+          } catch (error) {
+            errorMessage.style.display = "block";
+          } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Send message";
+          }
+        });
+        // Preload critical images
+        document.addEventListener('DOMContentLoaded', function() {
+          const images = document.querySelectorAll('.image-full');
+          images.forEach(img => {
+            if (img.getBoundingClientRect().top < window.innerHeight) {
+              // Remove lazy loading for images above the fold
+              img.removeAttribute('loading');
+              
+              // Preload the image
+              const preloadLink = document.createElement('link');
+              preloadLink.href = img.src;
+              preloadLink.rel = 'preload';
+              preloadLink.as = 'image';
+              document.head.appendChild(preloadLink);
+            }
+          });
+        });
+      
+        // Handle scroll performance
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+          if (!ticking) {
+            window.requestAnimationFrame(function() {
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+      </script>
     </div>
   </body>
 </html>
