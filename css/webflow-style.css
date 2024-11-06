@@ -5888,6 +5888,9 @@ figcaption {
   inset: 0%;
   overflow: hidden;
 }
+.preloader-hidden {
+  display: none;
+}
 
 .preloader-content {
   grid-column-gap: 24px;

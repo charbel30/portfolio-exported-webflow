@@ -5,6 +5,12 @@
  *   var Webflow = Webflow || [];
  *   Webflow.push(readyFunction);
  */
+window.addEventListener('load', function() {
+  document.querySelector('.preloader').classList.remove('preloader-hidden');
+});
+
+
+
 
 (() => {
   var __create = Object.create;

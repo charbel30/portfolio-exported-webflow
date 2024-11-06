@@ -97,8 +97,10 @@
   </head>
   <body class="body">
     <div class="page-wrapper">
-      
-      <div class="preloader" data-w-id="a30832af-37da-084b-575e-ca3a1631cb9b">
+      <div
+        class="preloader preloader-hidden"
+        data-w-id="a30832af-37da-084b-575e-ca3a1631cb9b"
+      >
         <div
           class="preloader-content"
           data-w-id="a30832af-37da-084b-575e-ca3a1631cb9c"
@@ -2694,40 +2696,6 @@
         }, {});
 
         observer.observe(containerElement);
-      </script>
-      <script>
-        // Preload critical images
-        document.addEventListener("DOMContentLoaded", function () {
-          const images = document.querySelectorAll(".image-full");
-          images.forEach((img) => {
-            if (img.getBoundingClientRect().top < window.innerHeight) {
-              // Remove lazy loading for images above the fold
-              img.removeAttribute("loading");
-
-              // Preload the image
-              const preloadLink = document.createElement("link");
-              preloadLink.href = img.src;
-              preloadLink.rel = "preload";
-              preloadLink.as = "image";
-              document.head.appendChild(preloadLink);
-            }
-          });
-        });
-
-        // Handle scroll performance
-        let ticking = false;
-        window.addEventListener(
-          "scroll",
-          function () {
-            if (!ticking) {
-              window.requestAnimationFrame(function () {
-                ticking = false;
-              });
-              ticking = true;
-            }
-          },
-          { passive: true }
-        );
       </script>
     </div>
   </body>
