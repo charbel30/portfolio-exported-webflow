@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - development
+    paths:
+      - '**.js'
+      - '**.css'
+      - '**.html'
+      - 'scripts/**'
+      - '.github/workflows/**'
 
 jobs:
   update-production:
@@ -14,19 +20,37 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: development
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
 
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install beautifulsoup4 requests
+
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '16'
 
+    - name: Install Node.js dependencies
+      run: |
+        npm install -g terser clean-css-cli html-minifier
+        npm ci
+
     - name: Run minification
-      run: python scripts/minify.py
+      run: |
+        echo "Starting minification process..."
+        python scripts/minify.py
+        if [ $? -ne 0 ]; then
+          echo "Minification failed"
+          exit 1
+        fi
+        echo "Minification completed successfully"
 
     - name: Set up Git
       run: |
@@ -37,10 +61,29 @@ jobs:
       env:
         GH_PAT: ${{ secrets.GH_PAT }}
       run: |
+        # Stage all changes
         git add -A
-        git commit -m "Minify assets and update production branch"
+        
+        # Check if there are any changes to commit
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+          exit 0
+        fi
+        
+        # Commit minified changes
+        git commit -m "Minify assets for production
+        
+        - Minified JS files
+        - Minified CSS files
+        - Minified HTML files
+        - Updated on: $(date -u)"
+        
+        # Create/switch to production branch
         git checkout -B production
-        git rm -r .github
-        git rm -r scripts
-        git commit -m "Update production branch"
-        git push https://x-access-token:${GH_PAT}@github.com/charbel30/CharbelTannous-portfolio.git production --force
+        
+        # Remove development-only files
+        git rm -r --cached .github scripts || true
+        git commit -m "Clean up development files from production branch"
+        
+        # Force push to production (with lease for safety)
+        git push --force-with-lease https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git production
