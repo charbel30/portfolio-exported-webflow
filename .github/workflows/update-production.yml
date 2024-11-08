@@ -10,8 +10,6 @@ on:
       - '**.html'
       - 'scripts/**'
       - '.github/workflows/**'
-      - 'package.json'
-      - 'package-lock.json'
 
 jobs:
   update-production:
@@ -38,32 +36,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Create package.json if not exists
+      - name: Install minification tools
         run: |
-          if [ ! -f "package.json" ]; then
-            echo '{
-              "name": "charbeltannous-portfolio",
-              "version": "1.0.0",
-              "private": true,
-              "dependencies": {},
-              "devDependencies": {
-                "terser": "^5.24.0",
-                "clean-css-cli": "^5.6.2",
-                "html-minifier": "^4.0.0"
-              }
-            }' > package.json
-          fi
-
-      - name: Install Node.js dependencies
-        run: |
-          # Install dependencies and generate package-lock.json
-          npm install
-          
-          # Verify global installations
-          echo "Installing global packages..."
-          npm list -g terser clean-css-cli html-minifier || npm install -g terser clean-css-cli html-minifier
+          npm install -g terser clean-css-cli html-minifier
 
       - name: Run minification
         run: |
