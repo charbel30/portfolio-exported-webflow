@@ -17,13 +17,13 @@ jobs:
     
     steps:
       - name: Checkout development branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           ref: development
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
           python-version: '3.x'
 
@@ -33,9 +33,9 @@ jobs:
           pip install beautifulsoup4 requests
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '16'
 
       - name: Install minification tools
         run: |
@@ -43,9 +43,7 @@ jobs:
 
       - name: Run minification
         run: |
-          echo "Starting minification process..."
-          
-          # Create dist directory if it doesn't exist
+          # Create dist directory
           mkdir -p dist
           
           # Minify JavaScript files
@@ -63,15 +61,11 @@ jobs:
           # Minify HTML files
           find . -type f -name "*.html" ! -path "./node_modules/*" ! -path "./dist/*" -exec bash -c '
             mkdir -p dist/$(dirname "{}")
-            html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true "{}" -o "dist/{}"
+            html-minifier --collapse-whitespace --remove-comments --remove-optional-tags \
+              --remove-redundant-attributes --remove-script-type-attributes \
+              --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true \
+              "{}" -o "dist/{}"
           ' \;
-          
-          echo "Minification completed successfully"
-
-      - name: Inline critical CSS/JS and defer non-critical scripts
-        run: |
-          # Inline critical CSS/JS and defer non-critical scripts
-          python scripts/inline_critical_css_js.py
 
       - name: Set up Git
         run: |
@@ -82,47 +76,23 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          # Stash local changes
-          git stash --include-untracked
-          
-          # Fetch the latest changes from the remote repository
-          git fetch origin production
-          
-          # Create and switch to production branch
-          git checkout -B production origin/production
-          
-          # Apply stashed changes
-          git stash pop
-          
           # Copy minified files from dist to their original locations
-          if [ -d "dist" ]; then
-            cp -r dist/* .
-            rm -rf dist
-          fi
-          
-          # Remove development-only files and directories
-          git rm -r --cached .github scripts || true
-          rm -rf .github scripts
+          cp -r dist/* .
+          rm -rf dist
           
           # Stage all changes
           git add -A
+          git commit -m "Minify assets and update production branch"
           
-          # Check if there are any changes to commit
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-            exit 0
-          fi
+          # Switch to production branch
+          git checkout -B production
           
-          # Commit minified changes
-          git commit -m "Minify assets for production
+          # Remove development-only files and directories
+          git rm -r .github scripts
+          git commit -m "Update production branch"
           
-          - Minified JS files
-          - Minified CSS files
-          - Minified HTML files
-          - Updated on: $(date -u)"
-          
-          # Force push to production (with lease for safety)
-          git push --force-with-lease https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git production
+          # Push to production branch
+          git push https://x-access-token:${GH_PAT}@github.com/${GITHUB_REPOSITORY}.git production --force
 
       - name: Cleanup
         if: always()
