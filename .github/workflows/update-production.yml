@@ -28,7 +28,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-          # Removed cache: 'pip' line
 
       - name: Install Python dependencies
         run: |
@@ -41,21 +40,30 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Create package.json if not exists
+        run: |
+          if [ ! -f "package.json" ]; then
+            echo '{
+              "name": "charbeltannous-portfolio",
+              "version": "1.0.0",
+              "private": true,
+              "dependencies": {},
+              "devDependencies": {
+                "terser": "^5.24.0",
+                "clean-css-cli": "^5.6.2",
+                "html-minifier": "^4.0.0"
+              }
+            }' > package.json
+          fi
+
       - name: Install Node.js dependencies
         run: |
-          # Install global minification tools
-          npm install -g terser clean-css-cli html-minifier
+          # Install dependencies and generate package-lock.json
+          npm install
           
-          # Check if package.json exists
-          if [ -f "package.json" ]; then
-            # If package-lock.json exists, use npm ci
-            if [ -f "package-lock.json" ]; then
-              npm ci
-            else
-              # Otherwise, use npm install and generate package-lock.json
-              npm install
-            fi
-          fi
+          # Verify global installations
+          echo "Installing global packages..."
+          npm list -g terser clean-css-cli html-minifier || npm install -g terser clean-css-cli html-minifier
 
       - name: Run minification
         run: |
