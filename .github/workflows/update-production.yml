@@ -67,6 +67,11 @@ jobs:
               "{}" -o "dist/{}"
           ' \;
 
+      - name: Inline critical CSS/JS and defer non-critical scripts
+        run: |
+          # Inline critical CSS/JS and defer non-critical scripts
+          python scripts/inline_critical_css_js.py
+
       - name: Set up Git
         run: |
           git config --global user.name "github-actions[bot]"
