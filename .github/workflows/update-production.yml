@@ -82,8 +82,11 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
+          # Fetch the latest changes from the remote repository
+          git fetch origin production
+          
           # Create and switch to production branch
-          git checkout -B production
+          git checkout -B production origin/production
           
           # Copy minified files from dist to their original locations
           if [ -d "dist" ]; then
