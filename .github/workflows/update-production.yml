@@ -15,6 +15,19 @@ jobs:
       with:
         ref: development
 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Run minification
+      run: python scripts/minify.py
+
     - name: Set up Git
       run: |
         git config --global user.name "github-actions[bot]"
@@ -24,6 +37,8 @@ jobs:
       env:
         GH_PAT: ${{ secrets.GH_PAT }}
       run: |
+        git add -A
+        git commit -m "Minify assets and update production branch"
         git checkout -B production
         git rm -r .github
         git rm -r scripts
