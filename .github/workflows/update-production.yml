@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-          cache: 'pip'
+          # Removed cache: 'pip' line
 
       - name: Install Python dependencies
         run: |
@@ -83,6 +83,11 @@ jobs:
           ' \;
           
           echo "Minification completed successfully"
+
+      - name: Inline critical CSS/JS and defer non-critical scripts
+        run: |
+          # Inline critical CSS/JS and defer non-critical scripts
+          python inline_critical_css_js.py
 
       - name: Set up Git
         run: |
