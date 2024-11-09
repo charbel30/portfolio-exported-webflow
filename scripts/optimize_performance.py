@@ -188,3 +188,33 @@ def main():
 
 if __name__ == '__main__':
     main()
+    above_fold_parents = [
+        'header', 'nav', '.nav', '.navbar',
+        'main > *:first-child',
+        '[class*="hero"]',
+        '.header', '.banner'
+    ]
+    
+    for parent_selector in above_fold_parents:
+        if element.find_parent(parent_selector):
+            return True
+    
+    # Check if element is one of the first few elements in the body
+    body = element.find_parent('body')
+    if body:
+        first_elements = body.find_all(['div', 'section', 'header', 'nav'], limit=3)
+        return element in first_elements or any(element in el.descendants for el in first_elements)
+    
+    return False
+
+def main():
+    # Process all HTML files
+    for root, _, files in os.walk('.'):
+        for file in files:
+            if file.endswith('.html'):
+                html_file = os.path.join(root, file)
+                print(f"Optimizing {html_file}")
+                optimize_html_file(html_file)
+
+if __name__ == '__main__':
+    main()
