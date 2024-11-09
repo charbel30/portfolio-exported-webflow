@@ -30,7 +30,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install beautifulsoup4 requests
+          pip install beautifulsoup4 requests cssselect tinycss
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -40,6 +40,9 @@ jobs:
       - name: Install minification tools
         run: |
           npm install -g terser clean-css-cli html-minifier
+
+      - name: Run performance optimizations
+        run: python scripts/optimize_performance.py
 
       - name: Run minification
         run: |
@@ -67,7 +70,6 @@ jobs:
               "{}" -o "dist/{}"
           ' \;
 
-
       - name: Set up Git
         run: |
           git config --global user.name "github-actions[bot]"
@@ -83,7 +85,7 @@ jobs:
           
           # Stage all changes
           git add -A
-          git commit -m "Minify assets and update production branch"
+          git commit -m "Apply performance optimizations and minify assets"
           
           # Switch to production branch
           git checkout -B production
