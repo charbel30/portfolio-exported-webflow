@@ -3,86 +3,23 @@ import re
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from pathlib import Path
-import cssselect
-import tinycss
-
-def extract_critical_css(html_file, css_file):
-    """Extract critical CSS by analyzing above-the-fold content"""
-    with open(html_file, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f, 'html.parser')
-    
-    with open(css_file, 'r', encoding='utf-8') as f:
-        full_css = f.read()
-    
-    # Get elements visible in the first viewport
-    critical_elements = set()
-    
-    # Header, navigation, and hero section are typically above the fold
-    viewport_elements = soup.select(
-        'header, nav, .nav, .navbar, ' +  # Navigation elements
-        'main > *:first-child, ' +        # First main content
-        '[class*="hero"], ' +             # Hero sections
-        '.header, .banner, ' +            # Header/banner areas
-        'img:first-of-type, ' +          # First image
-        '.logo, #logo'                    # Logo elements
-    )
-    
-    # Collect all classes and IDs from viewport elements
-    for element in viewport_elements:
-        # Add element tag
-        critical_elements.add(element.name)
-        
-        # Add classes
-        if element.get('class'):
-            critical_elements.update(element['class'])
-        
-        # Add IDs
-        if element.get('id'):
-            critical_elements.add(f"#{element['id']}")
-        
-        # Add parent classes for context
-        parent = element.parent
-        while parent and parent.name != '[document]':
-            if parent.get('class'):
-                critical_elements.update(parent['class'])
-            parent = parent.parent
-    
-    # Parse the full CSS
-    critical_css_rules = []
-    css_rules = re.findall(r'([^{]+){([^}]+)}', full_css)
-    
-    for selector, rules in css_rules:
-        selectors = [s.strip() for s in selector.split(',')]
-        
-        # Check if any selector matches our critical elements
-        for sel in selectors:
-            # Basic element selectors
-            if sel.strip().lower() in critical_elements:
-                critical_css_rules.append(f"{selector}{{{rules}}}")
-                break
-                
-            # Class selectors
-            classes = re.findall(r'\.([\w-]+)', sel)
-            if any(c in critical_elements for c in classes):
-                critical_css_rules.append(f"{selector}{{{rules}}}")
-                break
-                
-            # ID selectors
-            ids = re.findall(r'#([\w-]+)', sel)
-            if any(f"#{i}" in critical_elements for i in ids):
-                critical_css_rules.append(f"{selector}{{{rules}}}")
-                break
-    
-    # Add essential animations and transitions
-    animation_rules = re.findall(r'(@keyframes[\s\S]+?}\s*})', full_css)
-    critical_css_rules.extend(animation_rules)
-    
-    return '\n'.join(critical_css_rules)
 
 def optimize_html_file(html_file):
     """Apply performance optimizations to a single HTML file"""
     with open(html_file, 'r', encoding='utf-8') as file:
         soup = BeautifulSoup(file, 'html.parser')
+    
+    # Preload fonts to prevent layout shifts
+    font_files = [
+        'plusjakartasans-regular.woff',
+        'plusjakartasans-light.woff',
+        'plusjakartasans-bold.woff',
+        'plusjakartasans-medium.woff'
+    ]
+    
+    for font in font_files:
+        preload = soup.new_tag('link', rel='preload', href=f'/images/{font}', as_='font', type='font/woff', crossorigin='anonymous')
+        soup.head.insert(0, preload)
     
     # Extract and inline critical CSS from webflow-style.css
     css_file = 'css/webflow-style.css'
@@ -107,16 +44,11 @@ def optimize_html_file(html_file):
                     noscript.append(fallback_link)
                     link.insert_after(noscript)
 
-    # Defer non-critical scripts
-    for script in soup.find_all('script', {'src': True}):
-        if not any(critical in script['src'] for critical in ['jquery.js', 'webflow-script.js']):
-            script['defer'] = 'defer'
-
+    # Optimize script loading
+    optimize_scripts(soup)
+    
     # Add resource hints
     add_resource_hints(soup)
-    
-    # Optimize images
-    optimize_images(soup)
     
     # Add cache control headers
     add_cache_control(soup)
@@ -124,6 +56,92 @@ def optimize_html_file(html_file):
     # Write optimized HTML
     with open(html_file, 'w', encoding='utf-8') as file:
         file.write(str(soup))
+
+def extract_critical_css(html_file, css_file):
+    """Extract critical CSS based on above-the-fold content"""
+    with open(html_file, 'r', encoding='utf-8') as f:
+        soup = BeautifulSoup(f, 'html.parser')
+    
+    with open(css_file, 'r', encoding='utf-8') as f:
+        css_content = f.read()
+    
+    # Get elements visible in the first viewport
+    critical_selectors = set()
+    
+    # Extract classes and IDs from critical elements
+    critical_elements = soup.select(
+        'header, nav, .nav, .navbar, ' +  # Navigation elements
+        'main > *:first-child, ' +        # First main content
+        '[class*="hero"], ' +             # Hero sections
+        '.header, .banner, ' +            # Header/banner areas
+        '.preloader-content, ' +          # Preloader
+        '.brand, .logo, #logo'            # Logo elements
+    )
+    
+    for element in critical_elements:
+        # Add element tag
+        critical_selectors.add(element.name)
+        
+        # Add classes
+        if element.get('class'):
+            critical_selectors.update(element['class'])
+        
+        # Add IDs
+        if element.get('id'):
+            critical_selectors.add(f"#{element['id']}")
+        
+        # Add parent classes for context
+        parent = element.parent
+        while parent and parent.name != '[document]':
+            if parent.get('class'):
+                critical_selectors.update(parent['class'])
+            parent = parent.parent
+    
+    # Extract matching CSS rules
+    critical_css = []
+    css_rules = re.findall(r'([^{]+){([^}]+)}', css_content)
+    
+    for selector, rules in css_rules:
+        selectors = [s.strip() for s in selector.split(',')]
+        
+        # Check if any selector matches our critical elements
+        for sel in selectors:
+            # Basic element selectors
+            if sel.strip().lower() in critical_selectors:
+                critical_css.append(f"{selector}{{{rules}}}")
+                break
+                
+            # Class selectors
+            classes = re.findall(r'\.([\w-]+)', sel)
+            if any(c in critical_selectors for c in classes):
+                critical_css.append(f"{selector}{{{rules}}}")
+                break
+                
+            # ID selectors
+            ids = re.findall(r'#([\w-]+)', sel)
+            if any(f"#{i}" in critical_selectors for i in ids):
+                critical_css.append(f"{selector}{{{rules}}}")
+                break
+    
+    # Add essential animations and transitions
+    animation_rules = re.findall(r'(@keyframes[\s\S]+?}\s*})', css_content)
+    critical_css.extend(animation_rules)
+    
+    return '\n'.join(critical_css)
+
+def optimize_scripts(soup):
+    """Optimize script loading to prevent layout shifts"""
+    # Move all scripts to end of body
+    scripts = soup.find_all('script', src=True)
+    for script in scripts:
+        # Keep jQuery at the top since it's a dependency
+        if 'jquery.js' not in script['src']:
+            script.extract()
+            soup.body.append(script)
+        
+        # Add defer to non-critical scripts
+        if not any(critical in script['src'] for critical in ['jquery.js', 'webflow-script.js']):
+            script['defer'] = ''
 
 def add_resource_hints(soup):
     """Add preload, preconnect, and dns-prefetch hints"""
@@ -151,32 +169,6 @@ def add_resource_hints(soup):
             preload = soup.new_tag('link', rel='preload', href=f'/{path}', as_=type_)
             head.insert(0, preload)
 
-def optimize_images(soup):
-    """Add responsive image attributes and optimize image loading"""
-    for img in soup.find_all('img'):
-        # Add loading="lazy" for images below the fold
-        if not is_above_fold(img):
-            img['loading'] = 'lazy'
-        
-        # Add srcset for responsive images
-        if img.get('src') and img.get('src').endswith(('.jpg', '.jpeg', '.png', '.webp')):
-            src = img['src'].lstrip('/')
-            base_path = os.path.splitext(src)[0]
-            dir_path = os.path.dirname(src)
-            
-            # Check for responsive image variants
-            responsive_sizes = ['500', '800', '1080', '1600']
-            srcset = []
-            
-            for size in responsive_sizes:
-                variant_path = f"{base_path}-p-{size}{os.path.splitext(src)[1]}"
-                if os.path.exists(variant_path):
-                    srcset.append(f"{variant_path} {size}w")
-            
-            if srcset:
-                img['srcset'] = ', '.join(srcset)
-                img['sizes'] = '(max-width: 500px) 500px, (max-width: 800px) 800px, 1080px'
-
 def add_cache_control(soup):
     """Add cache control headers via meta tags"""
     cache_meta = soup.new_tag('meta', attrs={
@@ -184,28 +176,6 @@ def add_cache_control(soup):
         'content': 'max-age=31536000'
     })
     soup.head.insert(0, cache_meta)
-
-def is_above_fold(element):
-    """Determine if an element is likely above the fold"""
-    # Check if element is within typical above-fold elements
-    above_fold_parents = [
-        'header', 'nav', '.nav', '.navbar',
-        'main > *:first-child',
-        '[class*="hero"]',
-        '.header', '.banner'
-    ]
-    
-    for parent_selector in above_fold_parents:
-        if element.find_parent(parent_selector):
-            return True
-    
-    # Check if element is one of the first few elements in the body
-    body = element.find_parent('body')
-    if body:
-        first_elements = body.find_all(['div', 'section', 'header', 'nav'], limit=3)
-        return element in first_elements or any(element in el.descendants for el in first_elements)
-    
-    return False
 
 def main():
     # Process all HTML files
