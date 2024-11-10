@@ -135,26 +135,38 @@ class JavaScriptModernizer:
         
         soup = BeautifulSoup(content, 'html.parser')
         
-        # Update script tags
-        for script in soup.find_all('script', src=True):
+        # Find all script tags
+        script_tags = soup.find_all('script', src=True)
+        
+        # Create new script tags list
+        new_scripts = []
+        
+        # Process each script tag
+        for script in script_tags:
             src = script['src']
             if src.endswith('.js'):
                 # Find corresponding stats
                 for stat in js_stats:
                     if src in stat['file']:
-                        # Add modern bundle
+                        # Create modern script tag
                         modern_script = soup.new_tag('script')
                         modern_script['type'] = 'module'
                         modern_script['src'] = src.replace('.js', '.modern.js')
+                        new_scripts.append(modern_script)
                         
-                        # Add legacy bundle
+                        # Create legacy script tag
                         legacy_script = soup.new_tag('script')
                         legacy_script['nomodule'] = ''
                         legacy_script['src'] = src.replace('.js', '.legacy.js')
+                        new_scripts.append(legacy_script)
                         
-                        # Replace original script
-                        script.replace_with(modern_script)
-                        modern_script.insert_after(legacy_script)
+                        # Remove original script tag
+                        script.decompose()
+                        break
+        
+        # Add new script tags to the head
+        for new_script in new_scripts:
+            soup.head.append(new_script)
         
         # Save updated HTML
         with open(html_file, 'w', encoding='utf-8') as f:
