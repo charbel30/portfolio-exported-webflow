@@ -55,6 +55,58 @@
     <link href="images/app-icon.png" rel="apple-touch-icon" />
 
     <style>
+      .about-image-tetris {
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      
+      .about-image-tetris.loaded {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+
+      .transition-preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--black);
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+      }
+
+      .transition-preloader.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .transition-loader {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--royal-blue);
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+      }
+
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
       html {
         font-size: calc(0.625rem + 0.41666666666666663vw);
       }
@@ -204,34 +256,12 @@
     <link rel="stylesheet" href="/css/blockrain.css" />
   </head>
   <body>
-    <div class="page-wrapper">
-      <div
-        class="preloader preloader-hidden"
-        data-w-id="a30832af-37da-084b-575e-ca3a1631cb9b"
-      >
-        <div
-          class="preloader-content"
-          data-w-id="a30832af-37da-084b-575e-ca3a1631cb9c"
-        >
-          <div
-            class="preloader-brand"
-            data-w-id="a30832af-37da-084b-575e-ca3a1631cb9d"
-          >
-            Char
-          </div>
-          <div
-            class="preloader-line"
-            data-w-id="a30832af-37da-084b-575e-ca3a1631cb9f"
-          ></div>
-          <div
-            class="preloader-brand"
-            data-w-id="a30832af-37da-084b-575e-ca3a1631cba0"
-          >
-            bel.
-          </div>
-        </div>
+      <!-- Transition Preloader -->
+      <div class="transition-preloader">
+        <span class="transition-loader"></span>
       </div>
-    </div>
+  
+    <div class="page-wrapper">
     <div class="global-styles w-embed">
       <style>
         /* Snippet gets rid of top margin on first element in any rich text*/
@@ -1257,6 +1287,15 @@
           }
         });
       </script>
+      
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const elements = document.querySelectorAll(".work-card-image, .about-image-tetris");
+        elements.forEach(element => {
+          element.classList.add("loaded");
+        });
+      });
+    </script>
   </body>
 </html>
