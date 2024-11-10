@@ -7,7 +7,18 @@ html {
 body {
   margin: 0;
 }
+      
+        /* Apply the text-transition class to all common text elements */
+p, h1, h2, h3, h4, h5, h6, span, a {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
 
+p.loaded, h1.loaded, h2.loaded, h3.loaded, h4.loaded, h5.loaded, h6.loaded, span.loaded, a.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
 article,
 aside,
 details,

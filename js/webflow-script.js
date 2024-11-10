@@ -7,6 +7,13 @@
  */
 
 
+document.addEventListener("DOMContentLoaded", function() {
+  const elements = document.querySelectorAll(".portrait, p, h1, h2, h3, h4, h5, h6, span, a");
+  elements.forEach(element => {
+    element.classList.add("loaded");
+  });
+});
+
 
 (() => {
   var __create = Object.create;
