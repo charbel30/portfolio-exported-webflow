@@ -37,13 +37,6 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Run performance optimization
-        run: |
-          python scripts/performance-optimizer.py
-
-      - name: Run JavaScript modernization
-        run: |
-          python scripts/modernize-js.py
 
       - name: Run minification
         run: |
