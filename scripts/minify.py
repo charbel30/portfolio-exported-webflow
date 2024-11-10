@@ -15,9 +15,9 @@ logger = logging.getLogger(__name__)
 def ensure_node_modules():
     """Ensure required node packages are installed locally"""
     packages = [
-        'terser',          # JS minification
-        'clean-css-cli',   # CSS minification
-        'html-minifier'    # HTML minification
+        'terser@5.24.0',    # JS minification - pinned version
+        'clean-css-cli',     # CSS minification
+        'html-minifier'      # HTML minification
     ]
     
     if not os.path.exists('node_modules'):
@@ -44,22 +44,49 @@ def create_output_directory(file_path):
 def minify_javascript(file_path):
     """Minify a JavaScript file using terser"""
     try:
+        # Skip already minified files
+        if file_path.endswith('.min.js'):
+            logger.info(f"Skipping already minified file: {file_path}")
+            output_path = create_output_directory(file_path)
+            shutil.copy2(file_path, output_path)
+            return output_path
+
         output_path = create_output_directory(file_path)
         logger.info(f"Minifying JavaScript: {file_path}")
         
-        # Use local terser from node_modules
-        subprocess.run([
+        # Base terser options
+        terser_cmd = [
             'node_modules/.bin/terser',
             file_path,
             '--compress',
-            '--mangle',
+            'defaults=false,unused=false,dead_code=false',  # Less aggressive compression
+            '--mangle', 'reserved=["$"]',  # Preserve jQuery's $ variable
             '--output', output_path
-        ], check=True, capture_output=True)
+        ]
+        
+        # Add specific options for legacy/modern files
+        if '.legacy.js' in file_path:
+            terser_cmd.extend(['--ecma', '5'])
+        elif '.modern.js' in file_path:
+            terser_cmd.extend(['--ecma', '2015'])
+        
+        # Run terser with output capture
+        result = subprocess.run(
+            terser_cmd,
+            check=True,
+            capture_output=True,
+            text=True
+        )
         
         return output_path
     except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to minify {file_path}: {e}")
-        raise
+        logger.error(f"Failed to minify {file_path}")
+        logger.error(f"Terser stderr: {e.stderr}")
+        # Copy original file as fallback
+        logger.info(f"Using original file as fallback for: {file_path}")
+        output_path = create_output_directory(file_path)
+        shutil.copy2(file_path, output_path)
+        return output_path
 
 def minify_css(file_path):
     """Minify a CSS file using clean-css"""
@@ -77,7 +104,11 @@ def minify_css(file_path):
         return output_path
     except subprocess.CalledProcessError as e:
         logger.error(f"Failed to minify {file_path}: {e}")
-        raise
+        # Copy original file as fallback
+        logger.info(f"Using original file as fallback for: {file_path}")
+        output_path = create_output_directory(file_path)
+        shutil.copy2(file_path, output_path)
+        return output_path
 
 def minify_html(file_path):
     """Minify an HTML file using html-minifier"""
@@ -104,7 +135,11 @@ def minify_html(file_path):
         return output_path
     except subprocess.CalledProcessError as e:
         logger.error(f"Failed to minify {file_path}: {e}")
-        raise
+        # Copy original file as fallback
+        logger.info(f"Using original file as fallback for: {file_path}")
+        output_path = create_output_directory(file_path)
+        shutil.copy2(file_path, output_path)
+        return output_path
 
 def copy_minified_files():
     """Copy minified files from dist back to original locations"""
@@ -136,15 +171,27 @@ def main():
         
         # Process JavaScript files
         for js_file in js_files:
-            minify_javascript(js_file)
+            try:
+                minify_javascript(js_file)
+            except Exception as e:
+                logger.error(f"Error processing {js_file}: {e}")
+                continue
         
         # Process CSS files
         for css_file in css_files:
-            minify_css(css_file)
+            try:
+                minify_css(css_file)
+            except Exception as e:
+                logger.error(f"Error processing {css_file}: {e}")
+                continue
         
         # Process HTML files
         for html_file in html_files:
-            minify_html(html_file)
+            try:
+                minify_html(html_file)
+            except Exception as e:
+                logger.error(f"Error processing {html_file}: {e}")
+                continue
         
         # Copy minified files back to original locations
         copy_minified_files()
