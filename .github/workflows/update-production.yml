@@ -37,10 +37,6 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install minification tools
-        run: |
-          npm install -g terser clean-css-cli html-minifier
-
       - name: Run performance optimization
         run: |
           python scripts/performance-optimizer.py
@@ -51,35 +47,7 @@ jobs:
 
       - name: Run minification
         run: |
-          # Create dist directory if it doesn't exist
-          mkdir -p dist
-          
-          # Minify any remaining JavaScript files not handled by optimization
-          find . -type f -name "*.js" ! -path "./node_modules/*" ! -path "./dist/*" ! -name "*.modern.js" ! -name "*.legacy.js" -exec bash -c '
-            mkdir -p dist/$(dirname "{}")
-            terser "{}" -o "dist/{}" -c -m
-          ' \;
-          
-          # Minify modern and legacy JavaScript bundles
-          find . -type f -name "*.modern.js" -o -name "*.legacy.js" ! -path "./node_modules/*" ! -path "./dist/*" -exec bash -c '
-            mkdir -p dist/$(dirname "{}")
-            terser "{}" -o "dist/{}" -c -m
-          ' \;
-          
-          # Minify any remaining CSS files not handled by optimization
-          find . -type f -name "*.css" ! -path "./node_modules/*" ! -path "./dist/*" -exec bash -c '
-            mkdir -p dist/$(dirname "{}")
-            cleancss -o "dist/{}" "{}"
-          ' \;
-          
-          # Minify any remaining HTML files not handled by optimization
-          find . -type f -name "*.html" ! -path "./node_modules/*" ! -path "./dist/*" -exec bash -c '
-            mkdir -p dist/$(dirname "{}")
-            html-minifier --collapse-whitespace --remove-comments --remove-optional-tags \
-              --remove-redundant-attributes --remove-script-type-attributes \
-              --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true \
-              "{}" -o "dist/{}"
-          ' \;
+          python scripts/minify.py
 
       - name: Set up Git
         run: |
@@ -90,10 +58,6 @@ jobs:
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          # Copy optimized and minified files from dist to their original locations
-          cp -r dist/* .
-          rm -rf dist
-          
           # Stage all changes
           git add -A
           git commit -m "Apply optimization, modernization, and minification"
@@ -111,5 +75,4 @@ jobs:
       - name: Cleanup
         if: always()
         run: |
-          rm -rf dist
           git checkout development
