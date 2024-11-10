@@ -30,7 +30,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install beautifulsoup4 requests cssmin jsmin htmlmin
+          pip install beautifulsoup4 requests cssmin jsmin htmlmin Pillow
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -41,9 +41,13 @@ jobs:
         run: |
           npm install -g terser clean-css-cli html-minifier
 
-      - name: Run optimization script
+      - name: Run performance optimization
         run: |
-          python scripts/optimized-deployment.py
+          python scripts/performance-optimizer.py
+
+      - name: Run JavaScript modernization
+        run: |
+          python scripts/modernize-js.py
 
       - name: Run minification
         run: |
@@ -51,7 +55,13 @@ jobs:
           mkdir -p dist
           
           # Minify any remaining JavaScript files not handled by optimization
-          find . -type f -name "*.js" ! -path "./node_modules/*" ! -path "./dist/*" -exec bash -c '
+          find . -type f -name "*.js" ! -path "./node_modules/*" ! -path "./dist/*" ! -name "*.modern.js" ! -name "*.legacy.js" -exec bash -c '
+            mkdir -p dist/$(dirname "{}")
+            terser "{}" -o "dist/{}" -c -m
+          ' \;
+          
+          # Minify modern and legacy JavaScript bundles
+          find . -type f -name "*.modern.js" -o -name "*.legacy.js" ! -path "./node_modules/*" ! -path "./dist/*" -exec bash -c '
             mkdir -p dist/$(dirname "{}")
             terser "{}" -o "dist/{}" -c -m
           ' \;
@@ -86,7 +96,7 @@ jobs:
           
           # Stage all changes
           git add -A
-          git commit -m "Apply optimization and minification"
+          git commit -m "Apply optimization, modernization, and minification"
           
           # Switch to production branch
           git checkout -B production
