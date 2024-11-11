@@ -3522,6 +3522,12 @@ figcaption {
 }
 
 .tag {
+  display: inline-block;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 12px 16px;
+  margin: 8px;
+  cursor: pointer;
   letter-spacing: 1px;
   text-transform: uppercase;
   border-bottom: 1px solid #ffffff80;
@@ -3861,12 +3867,17 @@ figcaption {
 }
 
 .project-card {
+  display: block;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 20px;
+  margin-bottom: 16px;
+  cursor: pointer;
   z-index: 20;
   color: #fff;
   width: 100%;
   height: 50vw;
   min-height: 100%;
-  padding: 3rem;
   position: relative;
   overflow: hidden;
 }
