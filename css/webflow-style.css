@@ -2557,6 +2557,7 @@ figcaption {
 .form-wrapper {
   flex-direction: column;
   height: 100%;
+
   margin-bottom: 0;
   display: flex;
 }
@@ -2811,8 +2812,10 @@ figcaption {
   border-bottom: 1px solid var(--outline);
   flex-direction: column;
   margin-bottom: 0;
+  width: 100%;
   padding: 4rem 0 0;
   display: flex;
+
 }
 
 .icon-1x1-large {
@@ -4321,19 +4324,6 @@ figcaption {
   padding-bottom: 0;
   display: grid;
 }
-.about-hero-component-tetris {
-  grid-column-gap: 4rem;
-  grid-row-gap: 0rem;
-  flex-direction: row;
-  grid-template-rows: 1fr auto;
-  grid-template-columns: 50% 1fr;
-  grid-auto-columns: 1fr;
-  justify-content: space-between;
-  min-height: 75vh;
-  padding-top: 10rem;
-  padding-bottom: 0;
-  display: grid;
-}
 
 
 .about-hero-component.reverse {
@@ -4360,9 +4350,15 @@ figcaption {
   flex-direction: column;
   flex: 1;
   max-width: 45rem;
+  width: 100%; /* Added width constraint */
   padding-bottom: 9rem;
+  padding-left: 10px;
+  position: relative;
   display: flex;
+  overflow: hidden; /* Prevent content from spilling out */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
+
 
 .form-field {
   color: #fff;
@@ -4391,12 +4387,14 @@ figcaption {
 }
 
 .submit-button {
+ 
   background-color: var(--royal-blue);
   border-radius: 100px;
   margin-top: 2.75rem;
   margin-left: auto;
   padding: 1.4rem 2rem;
   line-height: 1;
+  
 }
 
 .about-hero-right {
@@ -5787,20 +5785,7 @@ figcaption {
   transform: rotate(40deg);
 }
 
-.checkboxwrapper {
-  z-index: 2;
-  grid-column-gap: 0.7rem;
-  grid-row-gap: 0.7rem;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  margin-bottom: 28px;
-  padding-top: 0;
-  padding-bottom: 0;
-  display: flex;
-  position: relative;
-}
+
 
 .burstspinehoriz {
   background-color: #ef4918;
@@ -7787,26 +7772,27 @@ figcaption {
 
 /* checkbox /* checkbox styles */
 /* From Uiverse.io by Timbar09 */ 
+/* checkbox styles */
 .checkbox__container {
-  --primary-clr-1: #455ce9; /* This was already set to your color */
-  --primary-clr-2: #455ce9; /* Updated to match */
+  --primary-clr-1: #455ce9;
+  --primary-clr-2: #455ce9;
   --text-clr-1: #8f8f8f;
-  --checkbox-bg-clr: #455ce933; /* Made this a transparent version of your blue */
-  --checkbox-border-clr: #455ce955; /* Made this a semi-transparent version of your blue */
-  /* Rest of the styles remain the same */
+  --checkbox-bg-clr: #455ce933;
+  --checkbox-border-clr: #455ce955;
 
   color: var(--text-clr-1);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5em;
-  margin-left: 100px;
-  width: auto; /* Adjust width to fit within the form wrapper */
+  gap: 0.75rem;
+  width: auto;
   position: relative;
-  padding: 0.5rem 0; /* Add padding for better spacing */
+  padding: 0.5rem 0;
+  margin: 0;
 }
 
+
 .checkbox {
-  --dimension: 1.5em;
+  --dimension: 1.25em;
   --tick-dimension: 0.15em;
 
   appearance: none;
@@ -7818,6 +7804,7 @@ figcaption {
   border-radius: 50%;
   cursor: pointer;
   rotate: 45deg;
+  flex-shrink: 0;
 }
 
 .checkbox:checked {
@@ -7915,6 +7902,7 @@ figcaption {
   transition: background-color 0.3s 0.3s ease-in-out, height 0.5s 1s ease-in-out;
 }
 
+/* Checkbox label adjustments */
 .checkbox__label {
   --hover: #cdcdcd;
   --checked: #8f8f8f49;
@@ -7922,8 +7910,18 @@ figcaption {
 
   cursor: pointer;
   user-select: none;
-  scale: 1.5;
+  scale: 1.3; /* Reduced scale */
   transition: color 0.3s;
+  overflow: hidden;
+  width: 100%; /* Adjust width */
+  display: flex;
+  margin-left:50px; /* Make label block-level */ /* Adjust padding */
+}
+
+@media screen and (min-width: 479px) {
+  .checkbox__label {
+    margin-left: 6vw;
+  }
 }
 
 .checkbox__label:hover {
@@ -7934,8 +7932,30 @@ figcaption {
   color: var(--checked);
 }
 
+
+/* Make the checkbox text wrap properly */
 .checkbox__label--text {
   position: relative;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-left: 0.5rem;
+  color: var(--text-clr-1);
+}
+
+
+/* Ensure the form field title stays within bounds */
+/* Adjust the form field title spacing */
+.form-field-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Error message styling */
+.error-message {
+  width: 100%;
+  margin-top: 0.5rem;
 }
 
 .checkbox__label--text::before {
@@ -7960,3 +7980,4 @@ figcaption {
   width: calc(100% + var(--stroke-dimension));
   transition: width 1.25s 0.75s, background-color 0.5s 2s;
 }
+

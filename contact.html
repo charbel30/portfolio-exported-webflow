@@ -60,6 +60,25 @@
         opacity: 0;
         transform: scale(0.95);
       }
+      @media screen and (min-width: 767px) {
+        .tetris-padding{
+          padding-left: 75px;
+        }
+        
+        
+      }
+      @media (m-width: 768px) {
+        .tetris-controls {
+          display: none !important;
+        }
+        
+        /* If you want to hide the entire tetris section on mobile */
+        .about-image-tetris,
+        .tetris-card {
+          display: none !important;
+        }
+        
+      }
       
       .about-image-tetris.loaded {
         opacity: 1;
@@ -127,16 +146,22 @@
       }
     </style>
     <style>
-      .about-hero-component-tetris {
-        display: grid;
-        justify-content: flex-end;
-        align-items: center;
-        min-height: 90vh;
-        position: relative;
-        width: 100%;
-        max-width: 1920px;
-        margin: 0 auto;
+      @media screen and (max-width: 767px) {
+        .contact-intro {
+          max-width: 100%;
+          padding: 2rem 1rem;
+        }
+        
+        .contact-intro h3.heading-xlarge {
+          font-size: 2rem;
+          line-height: 1.2;
+        }
+        
+        .contact-intro .text-size-large {
+          font-size: 1rem;
+        }
       }
+      
 
       .about-image-tetris {
         width: min(75%, 600px); /* Using min() for responsive width */
@@ -389,9 +414,9 @@
             <section class="section-contact-hero">
               <div class="page-padding">
                 <div class="container-large">
-                  <div class="about-hero-component-tetris reverse">
+                  <div class="about-hero-component  reverse">
                     <div
-                      class="about-image-tetris"
+                      class="about-image-tetris tetris-padding"
                       id="w-node-fe98b78f-d774-7d62-e8fb-063f8fe78824-3071e099"
                     >
                       <div class="tetris-card">
@@ -1162,26 +1187,56 @@
         <div class="mega-menu-trigger"></div>
       </div>
     </main>
+    </div>
     <script src="js/jquery.js" type="text/javascript"></script>
      <script src="js/webflow-script.js" type="text/javascript"></script>
     <div id="tetris">
       <script src="/js/blockrain.jquery.min.js"></script>
       <script>
         $(document).ready(function () {
-          $("#tetris").blockrain({
-            autoplay: false, // Disable autoplay
-            autoplayRestart: false,
-            speed: 50, // Standard Tetris speed
-            blockWidth: 10,
-            showFieldOnStart: true,
-            theme: "candy",
-            // Custom text
-            playText: "Ready to play Tetris?",
-            playButtonText: "Start Game",
-            gameOverText: "Game Over!",
-            restartButtonText: "Play Again",
-            scoreText: "Score",
-          });
+          // Check if device is desktop (screen width > 767px)
+          if (window.innerWidth > 767) {
+            $("#tetris").blockrain({
+              autoplay: false,
+              autoplayRestart: false,
+              speed: 50,
+              blockWidth: 10,
+              showFieldOnStart: true,
+              theme: "candy",
+              playText: "Ready to play Tetris?",
+              playButtonText: "Start Game",
+              gameOverText: "Game Over!",
+              restartButtonText: "Play Again",
+              scoreText: "Score",
+            });
+          }
+        });
+        
+        // Add resize handler to reinitialize game if window is resized above mobile breakpoint
+        $(window).on('resize', function() {
+          if (window.innerWidth > 767) {
+            // Only initialize if it hasn't been initialized yet
+            if (!$("#tetris").data('blockrain')) {
+              $("#tetris").blockrain({
+                autoplay: false,
+                autoplayRestart: false,
+                speed: 50,
+                blockWidth: 10,
+                showFieldOnStart: true,
+                theme: "candy",
+                playText: "Ready to play Tetris?",
+                playButtonText: "Start Game",
+                gameOverText: "Game Over!",
+                restartButtonText: "Play Again",
+                scoreText: "Score",
+              });
+            }
+          } else {
+            // Destroy instance if exists when resizing down to mobile
+            if ($("#tetris").data('blockrain')) {
+              $("#tetris").blockrain('destroy');
+            }
+          }
         });
       </script>
     </div>
