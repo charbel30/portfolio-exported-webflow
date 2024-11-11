@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /js/
+Allow: /css/
+Allow: /images/
+Allow: /category/
+Allow: /experience/
+
+# Allow all HTML files
+Allow: /*.html$
+
+# Sitemap location
+Sitemap: https://your-domain.com/sitemap.xml
+
