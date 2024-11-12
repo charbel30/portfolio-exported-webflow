@@ -1,4 +1,4 @@
-/*    // Page Transition Logic
+  // Page Transition Logic
    document.addEventListener('DOMContentLoaded', () => {
     const transitionPreloader = document.querySelector('.transition-preloader');
     const links = document.querySelectorAll('a[href]:not([target="_blank"])');
@@ -22,4 +22,4 @@
     window.addEventListener('load', () => {
       transitionPreloader.classList.remove('active');
     });
-  }); */
+  }); 
