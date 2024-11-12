@@ -37,12 +37,15 @@ jobs:
         with:
           node-version: '16'
 
-
       - name: Run minification
         run: |
           python scripts/minify.py
 
-      - name: Set up Gits
+      - name: Generate Sitemap
+        run: |
+          python scripts/generate_sitemap.py
+
+      - name: Set up Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
