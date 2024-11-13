@@ -32,10 +32,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install beautifulsoup4 requests cssmin jsmin htmlmin Pillow
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+      - name: Generate Source Maps
+        run: |
+          python scripts/generate_sourcemap.py
 
       - name: Run minification
         run: |
