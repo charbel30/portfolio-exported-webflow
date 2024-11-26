@@ -1,6 +1,7 @@
 name: Update Production Branch
 
 on:
+  workflow_dispatch:  # Added manual trigger
   push:
     branches:
       - development

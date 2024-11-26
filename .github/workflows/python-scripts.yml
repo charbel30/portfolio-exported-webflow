@@ -1,6 +1,8 @@
 name: Run Python Scripts
 
-on: [push]
+on:
+  workflow_dispatch:  # Added manual trigger
+  push:
 
 jobs:
   run-scripts:
