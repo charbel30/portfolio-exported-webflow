@@ -96,7 +96,7 @@
       ]
     },
     {
-      "source": "/(.*)\\.(?:css|js)",
+      "source": "/:path*\\.(css|js)",
       "headers": [
         {
           "key": "Cache-Control",
