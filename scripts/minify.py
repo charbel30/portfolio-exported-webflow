@@ -127,7 +127,10 @@ def minify_html(file_path):
             '--remove-tag-whitespace',
             '--use-short-doctype',
             '--minify-css', 'true',
-            '--minify-js', 'true',
+            '--minify-js', 'false',  # Don't minify inline JS to preserve JSON-LD
+            '--preserve-line-breaks',  # Help preserve JSON-LD formatting
+            '--conservative-collapse',  # More conservative whitespace collapse
+            '--max-line-length', '0',  # Prevent line wrapping
             '-o', output_path,
             file_path
         ], check=True, capture_output=True)
