@@ -4043,10 +4043,7 @@ figcaption {
 .works-hero-component {
   grid-column-gap: 0.5rem;
   grid-row-gap: 0.5rem;
-  grid-template-rows: auto;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-auto-columns: 1fr;
-  grid-auto-flow: column;
   padding-top: 5rem;
   padding-bottom: 8rem;
   display: grid;
