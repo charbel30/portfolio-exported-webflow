@@ -3657,7 +3657,16 @@ figcaption {
   position: absolute;
   inset: 0%;
 }
+.open-menu-link-wrapper {
+  visibility: hidden;
+  animation: showMenu 0.1s linear 1s forwards;
+}
 
+@keyframes showMenu {
+  to {
+    visibility: visible;
+  }
+}
 .paragraph-intro {
   text-align: left;
   max-width: 37rem;
