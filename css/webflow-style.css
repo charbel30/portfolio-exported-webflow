@@ -4043,7 +4043,7 @@ figcaption {
 .works-hero-component {
   grid-column-gap: 0.5rem;
   grid-row-gap: 0.5rem;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   padding-top: 5rem;
   padding-bottom: 8rem;
   display: grid;
@@ -8002,3 +8002,33 @@ figcaption {
   transition: width 1.25s 0.75s, background-color 0.5s 2s;
 }
 
+
+
+
+/* images/*  */
+
+.hero-images {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.project-hero-image {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+
+.w-dyn-item {
+  width: 100%;
+}
+
+
+.showcase-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
